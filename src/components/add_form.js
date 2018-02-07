@@ -11,6 +11,7 @@ class AddForm extends Component{
         }
         this.handleInputChange = this.handleInputChange.bind(this);
         this.addItem= this.addItem.bind(this);
+    
     }
     handleInputChange(e) {
         const { name, value } = e.target;
@@ -45,7 +46,9 @@ class AddForm extends Component{
                         </div>
                     </div>
                     <div className='right'>
-                        <button className="btn pink lighten-2 z-depth-4"></button>
+                        <button className="btn btn-large btn-floating pink lighten-2 z-depth-4">
+                            <i className="material-icons">add_circle_outline</i>
+                        </button>
                     </div>
                     
                 </form>
