@@ -1,34 +1,59 @@
 import 'materialize-css/dist/css/materialize.min.css'
 import React, { Component } from 'react';
+import axios from 'axios';
 import TodoList from './todo_list';
 import AddForm from './add_form.js';
 import todoData from '../assets/data'
+
+const BASE_URL = 'http://api.reactprototypes.com';
+const API_KEY = '?key=nottaylorskey';
 
 class App extends Component{
     constructor(props){
         super(props);
         this.state={
-            list: todoData,
+            list: [],
 
         }
         this.addItem=this.addItem.bind(this);
         this.deleteItem=this.deleteItem.bind(this)
+        this.toggleComplete=this.toggleComplete.bind(this);
+    }
+    componentDidMount(){
+        this.getData();
     }
 
-    addItem(item){
-        this.setState({
-            list: [item, ...this.state.list]
+    getData(){
+        axios.get(`${BASE_URL}/todos${API_KEY}`).then(res=>{
+            // console.log('res: ', res)
+            this.setState({
+                list: res.data.todos
+            })
         })
     }
 
-    deleteItem(index){
-        const newList= [...this.state.list]
+    addItem(item){
+        axios.post(`${BASE_URL}/todos${API_KEY}`, item).then(res=>{
+            this.getData();
+        })
+    }
 
-        newList.splice(index,1);
+    deleteItem(id){
+        // console.log('delete id:', id)
+        axios.delete(`${BASE_URL}/todos/${id+API_KEY}`).then(res=>{
+            console.log('deleteres: ',res)
 
-        this.setState({
-            list:newList
-        });
+            this.getData();
+
+        })
+    }
+    toggleComplete(id){
+        axios.put(`${BASE_URL}/todos/${id+API_KEY}`).then(res=>{
+            console.log('deleteres: ',res)
+            
+            this.getData();
+
+        })
 
     }
 
@@ -38,7 +63,7 @@ class App extends Component{
             <div className='container'>
                 <h1 className="center-align">To Do App</h1>
                 <AddForm add={this.addItem}/>
-                <TodoList list={list} delete={this.deleteItem}/>
+                <TodoList list={list} delete={this.deleteItem} complete={this.toggleComplete}/>
             </div>
 
         )
